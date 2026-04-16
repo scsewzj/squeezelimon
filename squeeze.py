@@ -19,7 +19,10 @@ print("We Sincerely thank the Limonada team at University of Reims Champagne-Ard
 print("For more information, please refer to: https://limonada.univ-reims.fr/")
 print("🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋🍋")
 
-def load_data(metatable_path, links_path):
+CSV_PATH = importlib.resources.files("squeezelimon") / "lipid_top_db.csv"
+TXT_PATH = importlib.resources.files("squeezelimon") / "lipid_top_links.txt"
+
+def load_data(metatable_path = str(CSV_PATH), links_path = str(TXT_PATH)):
     df_all = pd.read_csv(metatable_path)
     with open(links_path, 'r') as f:
         all_links = [line.strip() for line in f]
@@ -66,6 +69,7 @@ def selectdownload(subs):
         else:
             print("🍋Invalid choice. No download performed.")
 
+
 def main():
     argparser = argparse.ArgumentParser(description='🍋Query and download lipid topology files.')
     argparser.add_argument('--filename', type=str, required=True, help='🍋Name of the topology file (e.g., POPC.itp)')
@@ -75,9 +79,8 @@ def main():
     argparser.add_argument('--software', type=str, help='🍋Software (e.g., gromacs)')
     args = argparser.parse_args()
     
-    csv_path = importlib.resources.files("squeezelimon") / "lipid_top_db.csv"
-    txt_path = importlib.resources.files("squeezelimon") / "lipid_top_links.txt"
-    df_all, all_links = load_data(str(csv_path), str(txt_path))
+    
+    df_all, all_links = load_data(str(CSV_PATH), str(TXT_PATH))
     qed_links = query_link(all_links, filename=args.filename, ff=args.ff, lipid=args.lipid, project=args.project, software=args.software)
     selectdownload(qed_links)
             
